@@ -1,24 +1,25 @@
 package;
 
-import nme.events.Event;
-import nme.events.ErrorEvent;
-import nme.display.Sprite;
+import flash.events.Event;
+import flash.events.ErrorEvent;
+import flash.display.Sprite;
 
-import nme.display3D.IndexBuffer3D;
-import nme.display3D.shaders.glsl.GLSLFragmentShader;
-import nme.display3D.shaders.glsl.GLSLVertexShader;
-import nme.display3D.shaders.glsl.GLSLProgram;
-import nme.display3D.VertexBuffer3D;
+import flash.display3D.IndexBuffer3D;
+import flash.display3D.shaders.glsl.GLSLFragmentShader;
+import flash.display3D.shaders.glsl.GLSLVertexShader;
+import flash.display3D.shaders.glsl.GLSLProgram;
+import flash.display3D.VertexBuffer3D;
 
-using nme.geom.Matrix3D;
+using flash.geom.Matrix3D;
 
-using nme.Vector;
-using nme.display3D.Context3DUtils;
+using flash.Vector;
+//using flash.display3D.Context3DUtils;
+using OpenFLStage3D;
 
 class Main extends Sprite {
 
 
-    var stage3D : nme.display.Stage3D;
+    var stage3D : flash.display.Stage3D;
     var context3D : flash.display3D.Context3D;
 
     var vertexBuffer : VertexBuffer3D;
@@ -33,8 +34,12 @@ class Main extends Sprite {
 
 	}
 
-    function onAddedToStage(event : Event) : Void{
+    function onAddedToStage(event : Event) : Void {
+		#if flash
         stage3D = stage.stage3Ds[0];
+		#else
+		stage3D = stage.getStage3D(0);
+		#end
         stage3D.addEventListener( Event.CONTEXT3D_CREATE, onReady );
         stage3D.addEventListener( ErrorEvent.ERROR, onError );
         stage3D.requestContext3D();
@@ -105,7 +110,7 @@ class Main extends Sprite {
     }
 
 
-    function update() {
+    function update(e) {
 
         var positionX = stage.stageWidth / 2;
         var positionY = stage.stageHeight / 2;
@@ -118,7 +123,7 @@ class Main extends Sprite {
 
         glslProgram.attach();
         glslProgram.setVertexUniformFromMatrix("mvpMatrix",mvpMatrix, true);
-        glslProgram.setVertexBufferAt("vertexPosition",vertexBuffer, 0, nme.display3D.Context3DVertexBufferFormat.FLOAT_3);
+        glslProgram.setVertexBufferAt("vertexPosition",vertexBuffer, 0, flash.display3D.Context3DVertexBufferFormat.FLOAT_3);
 
 
         context3D.clear(0, 0, 0, 1.0);
